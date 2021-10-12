@@ -3,11 +3,11 @@ import os
 import click
 from flask import Flask, render_template
 
-from .settings import config
-from .extensions import db, migrate, moment, ckeditor, mail, bootstrap
-from .blueprints.admin import admin_bp
-from .blueprints.auth import auth_bp
-from .blueprints.blog import blog_bp
+from bluelog.settings import config
+from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap
+from bluelog.blueprints.admin import admin_bp
+from bluelog.blueprints.auth import auth_bp
+from bluelog.blueprints.blog import blog_bp
 
 
 def create_app(config_name=None):
