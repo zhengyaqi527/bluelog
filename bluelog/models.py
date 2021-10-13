@@ -26,7 +26,7 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Categorp', back_populates='posts')
-    comments = db.relationship('Comment', back_populates='post', cascase='all')
+    comments = db.relationship('Comment', back_populates='post', cascade='all')
 
 
 class Comment(db.Model):
@@ -40,4 +40,12 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     post = db.relationship('Post', back_populates='comments')
-    replied_id = db.Column(db.Intefer, db.ForeignKey())
+    replied_id = db.Column(db.Intefer, db.ForeignKey('comment.id'))
+    replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
+    replies = db.relationship('Comment', back_populates='replied', cascade='add')
+
+
+class Link(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+    url = db.Column(db.String(255))
