@@ -71,7 +71,18 @@ def register_shell_context(app):
 
 # 模板上下文处理函数
 def register_template_context(app):
-    pass
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.name).all()
+        links = Link.query.order_by(Link.name).all()
+        posts = Post.query.order_by(Post.timestamp).all()
+        return dict(
+            admin=admin,
+            categories=categories,
+            links=links,
+            posts=posts
+        )
 
 
 # 错误处理函数
