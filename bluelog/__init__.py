@@ -8,6 +8,8 @@ from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap
 from bluelog.blueprints.admin import admin_bp
 from bluelog.blueprints.auth import auth_bp
 from bluelog.blueprints.blog import blog_bp
+from bluelog.models import Admin, Post, Comment, Category, Link
+from bluelog.commands import register_commands
 
 
 def create_app(config_name=None):
@@ -59,7 +61,11 @@ def register_shell_context(app):
             bootstrap=bootstrap, 
             moment=moment,
             ckeditor=ckeditor,
-            mail=mail
+            mail=mail,
+            Admin=Admin,
+            Post=Post,
+            Category=Category,
+            Comment=Comment
         )
 
 
@@ -81,16 +87,3 @@ def register_errors(app):
     @app.errorhandler(500)
     def internal_server_error(e):
         return render_template('errors/500.html'), 500
-
-
-# 命令函数
-def register_commands(app):
-    @app.cli.command()
-    @click.option('--drop', is_flag=True, help='Create after drop.')
-    def initdb(drop):
-        if drop:
-            click.echo('This operation will delete the tables, doyou want to continue?', abort=True)
-            db.drop_all()
-            click.echo('Drop tables.')
-        db.create_all()
-        click.echo('Initialized database.')

@@ -39,9 +39,9 @@ def fake_categories(count=10):
 def fake_posts(count=50):
     for i in range(50):
         post = Post(
-            title = fake.sentence(),
-            body = fake.text(2000),
-            category = Category.query.get(random.randint(1, Post.query.count()))
+            title=fake.sentence(3),
+            body=fake.text(2000),
+            category=Category.query.get(random.randint(1, Category.query.count()))
         )
         db.session.add(post)
     
@@ -61,7 +61,7 @@ def fake_comments(count=500):
         )
         db.session.add(comment)
 
-    salt = int(count * 0,1)
+    salt = int(count * 0.1)
     # 未审核comment
     for i in range(salt):
         comment = Comment(
@@ -91,7 +91,7 @@ def fake_comments(count=500):
 
     db.session.commit()
 
-    # rplies
+    # replies
     for i in range(salt):
         comment = Comment(
             author=fake.name(),

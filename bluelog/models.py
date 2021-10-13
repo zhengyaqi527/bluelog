@@ -10,13 +10,13 @@ class Admin(db.Model):
     blog_title = db.Column(db.String(60))
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))
-    about = db.Columnt(db.Text)
+    about = db.Column(db.Text)
 
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True)
-    posts = db.relationshp('Post', back_populates='category')
+    posts = db.relationship('Post', back_populates='category')
 
 
 class Post(db.Model):
@@ -25,7 +25,7 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    category = db.relationship('Categorp', back_populates='posts')
+    category = db.relationship('Category', back_populates='posts')
     comments = db.relationship('Comment', back_populates='post', cascade='all')
 
 
@@ -40,9 +40,9 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     post = db.relationship('Post', back_populates='comments')
-    replied_id = db.Column(db.Intefer, db.ForeignKey('comment.id'))
+    replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
-    replies = db.relationship('Comment', back_populates='replied', cascade='add')
+    replies = db.relationship('Comment', back_populates='replied', cascade='all')
 
 
 class Link(db.Model):
