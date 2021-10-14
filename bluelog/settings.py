@@ -17,6 +17,7 @@ class BaseConfig(object):
     MAIL_DEFAULT_SENDER = ('Blog Admin', os.getenv('MAIL_USERNAME'))
 
     BLUELOG_EMAIL = os.getenv('BLUELOG_EMAIL')
+    BLUELOG_POST_PER_PAGE = 10
 
 
 
