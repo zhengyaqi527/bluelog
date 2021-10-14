@@ -20,7 +20,7 @@ def send_mail(subject, to, html):
 
 
 def send_new_comment_email(post):
-    post_url = url_for('blog.show_post', post_id=post.id, _external=True) + '#comment'
+    post_url = url_for('blog.show_post', post_id=post.id, _external=True) + '#comments'
     send_mail(subject='New comment',
                 to=current_app.config['BLUELOG_MAIL'],
                 html='<p>New comment in post <i>%s</i>, click the link blew to check:</p>'
@@ -30,7 +30,7 @@ def send_new_comment_email(post):
 
 
 def send_new_reply_email(comment):
-    post_url = url_for('blog.show_post', post_id=comment.post.id, _external=True)
+    post_url = url_for('blog.show_post', post_id=comment.post.id, _external=True) + '#comments'
     send_mail(subject='New reply',
                 to=comment.email,
                 html='<p>New reply for the comment you left in post <i>%s</i>, click the link below to check: </p>'

@@ -16,7 +16,7 @@ def manage_post():
     return render_template('admin/manage_post.html')
 
 
-@admin_bp.route('/post/new', mehtods=['GET', 'POST'])
+@admin_bp.route('/post/new', methods=['GET', 'POST'])
 def new_post():
     form = PostForm()
     return render_template('admin/new_post.html', form=form)

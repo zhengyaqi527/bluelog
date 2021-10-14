@@ -10,7 +10,7 @@ def index():
 
 @blog_bp.route('/about')
 def about():
-    return render_template('blog/about/html')
+    return render_template('blog/about.html')
 
 
 @blog_bp.route('/category/<int:category_id>')
