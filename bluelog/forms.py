@@ -1,4 +1,3 @@
-from flask.app import Flask
 from flask_wtf import FlaskForm
 from flask_ckeditor import CKEditorField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, HiddenField
@@ -54,4 +53,10 @@ class SettingForm(FlaskForm):
     blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
     blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 100)])
     about = CKEditorField('About Page', validators=[DataRequired()])
+    submit = SubmitField()
+
+
+class LinkForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
+    url = StringField('URL', validators=[DataRequired(), URL(), Length(1, 255)])
     submit = SubmitField()
