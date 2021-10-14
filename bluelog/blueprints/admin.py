@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from bluelog.blueprints.utils import redirect_back
 
 from bluelog.forms import CategoryForm, PostForm, SettingForm, LinkForm
 
@@ -29,12 +30,12 @@ def edit_post(post_id):
 
 @admin_bp.route('post/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
-    return 'delete post'
+    return redirect_back()
 
 
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
 def set_comment(post_id):
-    return 'set comment'
+    return redirect_back()
 
 
 @admin_bp.route('/comment/manage')
@@ -44,12 +45,12 @@ def manage_comment():
 
 @admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
 def approve_comment(comment_id):
-    return 'approve comment'
+    return redirect_back()
 
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id):
-    return 'delete comment'
+    return redirect_back()
 
 
 @admin_bp.route('/category/manage')
