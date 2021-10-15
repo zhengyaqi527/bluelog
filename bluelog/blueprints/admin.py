@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from bluelog.blueprints.utils import redirect_back
+from bluelog.utils import redirect_back
 
 from bluelog.forms import CategoryForm, PostForm, SettingForm, LinkForm
 

@@ -18,6 +18,7 @@ class BaseConfig(object):
 
     BLUELOG_EMAIL = os.getenv('BLUELOG_EMAIL')
     BLUELOG_POST_PER_PAGE = 10
+    BLUELOG_COMMENT_PER_PAGE = 10
 
 
 
