@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template
 
 from bluelog.settings import config
-from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap
+from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap, login_manager
 from bluelog.blueprints.admin import admin_bp
 from bluelog.blueprints.auth import auth_bp
 from bluelog.blueprints.blog import blog_bp
@@ -41,6 +41,7 @@ def register_extensions(app):
     ckeditor.init_app(app)
     moment.init_app(app)
     mail.init_app(app)
+    login_manager.init_app(app)
 
 
 # 注册蓝本函数

@@ -1,8 +1,10 @@
 
 import click
+from click.termui import prompt
 
 from bluelog.fakes import fake_admin, fake_categories, fake_posts, fake_comments
 from bluelog.extensions import db
+from bluelog.models import Admin, Category
 
 
 def register_commands(app):
@@ -40,3 +42,35 @@ def register_commands(app):
         fake_comments(comment)
 
         click.echo('Generating is done.')
+
+
+    @app.cli.command()
+    @click.option('--username', prompt=True, help='The username used to login.')
+    @click.password_option('--password', prompt=True, help='The password used to login.')
+    def init(username, password):
+        
+        admin = Admin.query.first()
+        if admin:
+            click.echo('The administrator alreader exists, updating...')
+            admin.username = username
+            admin.set_password(password)
+        else:
+            click.echo('Creating the tempory administrator account...')
+            admin = Admin(
+                username=username,
+                blog_title='BLUELOG',
+                blog_sub_title='The real blog.',
+                name='Admin',
+                about='This is my first blog.'
+            )
+            admin.set_password(password)
+            db.session.add(admin)
+        
+        catefory = Category.query.first()
+        if catefory is None:
+            click.echo('Creating the default category...')
+            catefory = Category(name='default')
+            db.session.add(catefory)
+        
+        db.session.commit()
+        click.echo('Done.')
