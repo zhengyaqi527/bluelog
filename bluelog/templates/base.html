@@ -25,6 +25,41 @@
                     {{ render_nav_item('blog.index', 'Home') }}
                     {{ render_nav_item('blog.about', 'About') }}
                 </ul>
+
+                <ul class="nav navbar-nav navbar-tight">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                New<span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url_for('admin.new_post') }}">Post</a>
+                                <a class="dropdown-item" href="{{ url_for('admin.new_category') }}">Category</a>
+                                <a class="dropdown-item" href="{{ url_for('admin.new_link') }}">Link</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+                                Manage<span class="caret"></span>
+                                {% if unread_comments %}
+                                    <span class="badge badge-success">new</span>
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url_for('admin.manage_post') }}">Post</a>
+                                <a class="dropdown-item" href="{{ url_for('admin.manage_category') }}">Category</a>
+                                <a class="dropdown-item" href="{{ url_for('admin.manage_comment') }}">
+                                    Comment
+                                    {% if unread_comments %}
+                                        <span class="badge badge-success">{{ unread_comments }}</span>
+                                    {% endif %}
+                                </a>
+                                <a class="dropdown-item" href="{{ url_for('admin.manage_link') }}">Link</a>
+                            </div>
+                        </li>
+                        {{ render_nav_item('admin.settings', 'Settings') }}
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
@@ -41,10 +76,8 @@
     {% block footer %}
         <footer>
             <p class="float-left">
-                <small> &copy; 2018 <a href="http://greyli.com" title="Written by Grey Li">Grey Li</a> -
-                    <a href="https://github.com/greyli/bluelog" title="Fork me on GitHub">GitHub</a> -
-                    <a href="http://helloflask.com" title="A HelloFlask project">HelloFlask</a>
-                </small>
+                <small> &copy; 2021 <a href="https://zhengyaqi527.github.io/struggle_everyday" title="Written by Yaqi Zheng">Yaqi Zheng</a> -
+                    <a href="https://github.com/zhengyaqi527/struggle_everyday" title="GitHub">GitHub</a>                </small>
             </p>
             <p class="float-right">
                 <small>

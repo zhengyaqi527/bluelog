@@ -79,11 +79,13 @@ def register_template_context(app):
         categories = Category.query.order_by(Category.name).all()
         links = Link.query.order_by(Link.name).all()
         posts = Post.query.order_by(Post.timestamp).all()
+        unread_comments = Comment.query.filter_by(reviewed=False).count()
         return dict(
             admin=admin,
             categories=categories,
             links=links,
-            posts=posts
+            posts=posts,
+            unread_comments=unread_comments
         )
 
 
