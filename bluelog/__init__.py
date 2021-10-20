@@ -1,9 +1,10 @@
 import os
 
 from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
 
 from bluelog.settings import config
-from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap, login_manager
+from bluelog.extensions import db, migrate, moment, ckeditor, mail, bootstrap, login_manager, csrf
 from bluelog.blueprints.admin import admin_bp
 from bluelog.blueprints.auth import auth_bp
 from bluelog.blueprints.blog import blog_bp
@@ -42,6 +43,7 @@ def register_extensions(app):
     moment.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    csrf.init_app(app)
 
 
 # 注册蓝本函数
@@ -87,6 +89,11 @@ def register_template_context(app):
 
 # 错误处理函数
 def register_errors(app):
+
+    @app.errorhandler(CSRFError)
+    def handler_csrf_error(e):
+        return render_template('errors/400.html', description=e.description), 400
+
     @app.errorhandler(400)
     def bad_request(e):
         return render_template('errors/400.html'), 400
