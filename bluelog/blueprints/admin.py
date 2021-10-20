@@ -101,11 +101,6 @@ def delete_post(post_id):
     return redirect_back()
 
 
-@admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
-def set_comment(post_id):
-    return redirect_back()
-
-
 @admin_bp.route('/comment/manage')
 def manage_comment():
     return render_template('admin/manage_comment.html')

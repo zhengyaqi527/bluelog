@@ -53,9 +53,9 @@
                         <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#comments">latest</a>
                     </small>
                     {% if current_user.is_authenticated %}
-                        <form class="float-right" method="post" action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path }}">
+                        <form class="float-right" method="post" action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                            <button>
+                            <button type="submit" class="btn btn-sm btn-warning">
                                 {% if post.can_comment %}Disable{% else %}Enable{% endif %} Comment
                             </button>
                         </form>
@@ -125,9 +125,15 @@
                     </a>
                 </div>
             {% endif %}
-            <div id="comment-form">
-                {{ render_form(form, action=request.full_path) }}
-            </div>
+            {% if post.can_comment %}
+                <div id="comment-form">
+                    {{ render_form(form, action=request.full_path) }}
+                </div>
+            {% else %}
+                <div class="tip">
+                    <h5>Comment disabled.</h5>
+                </div>
+            {% endif %}
         </div>
         <div class="col-sm-4 sidebar">
             {% include 'blog/_sidebar.html' %}
