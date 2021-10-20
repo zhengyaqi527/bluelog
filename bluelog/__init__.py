@@ -50,7 +50,7 @@ def register_extensions(app):
 def register_bluepirints(app):
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(admin_bp, url_prefix='/admin')
-    app.register_blueprint(blog_bp, prefix='/blog')
+    app.register_blueprint(blog_bp)
 
 
 # 程序上下文处理函数

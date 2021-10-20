@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, current_app, redirect, flash, url_for, abort, make_response
-from werkzeug.wrappers import response
+from flask_login import current_user
 
 from bluelog.forms import AdminCommentForm, CommentForm
 from bluelog.models import Category, Post, Comment
@@ -42,10 +42,8 @@ def show_post(post_id):
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
     pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(Comment.timestamp.asc()).paginate(page=page, per_page=per_page, error_out=False)
     comments = pagination.items
-    
-    current_user = None
-    if current_user:
-    # if current_user.is_authenticated:
+
+    if current_user.is_authenticated:
         form = AdminCommentForm()
         form.author.data = current_user.name
         form.email.data = current_app.config['BLUELOG_EMAIL']
@@ -57,15 +55,11 @@ def show_post(post_id):
         from_admin = False
         reviewed = False
     if form.validate_on_submit():
-        author = form.author.data
-        email = form.email.data
-        site = form.site.data
-        body = form.body.data
         comment = Comment(
-            author=author,
-            email=email,
-            site=site,
-            body=body,
+            author=form.author.data,
+            email=form.email.data,
+            site=form.site.data,
+            body=form.body.data,
             reviewed=reviewed,
             from_admin=from_admin,
             post=post
@@ -78,8 +72,7 @@ def show_post(post_id):
         db.session.add(comment)
         db.session.commit()
         
-        if current_user:
-        # if current_user.is_authenticated:
+        if current_user.is_authenticated:
             flash('Comment published.', 'success')
         else:
             flash('Thanks, your comment will be published after reviewed.', 'info'), send_new_comment_email(post)

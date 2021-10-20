@@ -52,6 +52,14 @@
                     <small>
                         <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#comments">latest</a>
                     </small>
+                    {% if current_user.is_authenticated %}
+                        <form class="float-right" method="post" action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            <button>
+                                {% if post.can_comment %}Disable{% else %}Enable{% endif %} Comment
+                            </button>
+                        </form>
+                    {% endif %}
                 </h3>
                 {% if comments %}
                     <ul class="list-group">
@@ -87,6 +95,15 @@
                                     <a class="btn btn-light btn-sm" href="{{ url_for('.reply_comment', comment_id=comment.id) }}">
                                         Reply
                                     </a>
+                                    {% if current_user.is_authenticated %}
+                                        <a class="btn btn-sm btn-light" href="mailto:{{ comment.email }}">Email</a>
+                                        <form class="inline" method="post" action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    {% endif %}
                                 </div>
                             </li>
                         {% endfor %}

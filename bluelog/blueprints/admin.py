@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app, request
 from flask_login import current_user, login_required
+import flask_login
 
 from bluelog.utils import redirect_back
 from bluelog.forms import CategoryForm, PostForm, SettingForm, LinkForm
@@ -34,6 +35,19 @@ def settings():
     form.blog_sub_title.data = current_user.blog_sub_title
 
     return  render_template('admin/settings.html', form=form)
+
+
+@admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
+def set_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.can_comment:
+        post.can_comment = False
+        flash('Comment disabled.', 'success')
+    else:
+        post.can_comment = True
+        flash('Comment enabled.', 'success')
+    db.session.commit()
+    return redirect_back()
 
 
 @admin_bp.route('/post/manage')
