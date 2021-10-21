@@ -105,7 +105,7 @@ def delete_post(post_id):
 def manage_comment():
     filter_rule = request.args.get('filter', 'all')
     page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['BLUELOG_COMMENT_POST_PER_PAGE']
+    per_page = current_app.config['BLUELOG_MANAGE_COMMENT_PER_PAGE']
     filtered_comments = None
     if filter_rule == 'unread':
         filtered_comments = Comment.query.filter_by(reviewed=False)
@@ -129,29 +129,56 @@ def approve_comment(comment_id):
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted.', 'success')
     return redirect_back()
 
 
 @admin_bp.route('/category/manage')
 def manage_category():
-    return render_template('admin/manage_category.html')
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['BLUELOG_MANAGE_CATEGORY_PER_PAGE']
+    pagination = Category.query.order_by(Category.id.desc()).paginate(page, per_page, error_out=False)
+    categories = pagination.items
+    return render_template('admin/manage_category.html', pagination=pagination, categories=categories)
 
 
 @admin_bp.route('/category/new', methods=['GET', 'POST'])
 def new_category():
     form = CategoryForm()
+    if form.validate_on_submit():
+        category = Category(name=form.name.data)
+        db.session.add(category)
+        db.session.commit()
+        flash('Categroy created.', 'success')
+        return redirect(url_for('.manage_category'))
     return render_template('admin/new_category.html', form=form)
 
 
 @admin_bp.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 def edit_category(category_id):
     form = CategoryForm()
-    return render_template('admin/edit_category', form=form)
+    category = Category.query.get_or_404(category_id)
+    if form.validate_on_submit():
+        category.name = form.name.data
+        db.session.commit()
+        flash('Category updated.', 'success')
+        return redirect(url_for('.manage_category'))
+    form.name.data = category.name
+    return render_template('admin/edit_category.html', form=form)
 
 
 @admin_bp.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
 def delete_category(category_id):
-    return redirect(url_for('.manage_category'))
+    if category_id == 1:
+        flash('You can not delete the dafault category.', 'warning')
+        return redirect_back()
+    category = Category.query.get_or_404(category_id)
+    category.delete()
+    flash('Category deleted.', 'success')
+    return redirect_back()
 
 @admin_bp.route('/link/manage')
 def manage_link():
